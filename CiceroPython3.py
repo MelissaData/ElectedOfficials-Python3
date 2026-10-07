@@ -1,3 +1,22 @@
+"""
+Cicero matches a location to its legislative districts and returns the elected
+officials who represent it, along with their contact information.
+
+High-level flow of this sample:
+  1. ARGS    - main reads any --flag values off the command line with argparse.
+  2. INPUT   - call_api fills in whatever wasn't supplied via interactive prompts.
+  3. REQUEST - call_api builds the REST query string (license + input fields).
+  4. CALL    - get_contents issues the GET request and pretty-prints the JSON response.
+
+This sample is a thin HTTP client: it builds a query string, sends a GET request to
+the Cicero Cloud API (official endpoint), and prints the JSON response.
+
+Reference:
+  - Documentation: https://docs.melissa.com/cloud-api/cicero/cicero-index.html
+  - Release notes: https://releasenotes.melissa.com/cloud-api/cicero-api/
+  - Result codes:  https://docs.melissa.com/melissa/result-codes/result-codes-index.html
+"""
+
 import json
 from threading import local
 import requests
@@ -5,6 +24,14 @@ import argparse
 import urllib.parse
 
 def main():
+  """
+  Entry point. Reads the optional command-line arguments, then hands control to
+  call_api, which performs the actual request/response cycle.
+
+  Recognized flags (each followed by its value, e.g. --location "22382 Avenida Empresa"):
+  --license/-l, --lat, --long, --location, --max.
+  Any flag not supplied is None, and call_api prompts for it interactively.
+  """
   base_service_url = "https://app.cicerodata.com/"
   service_endpoint = "v3.1/official"
 
@@ -28,11 +55,22 @@ def main():
   location = args.location
   max = args.max
 
+  # Run the lookup with whatever values were passed on the command line.
   call_api(base_service_url, service_endpoint, license, latitude, longitude, location, max)
 
 def get_contents(base_service_url, request_query):
+    """
+    Issues the GET request against the Cicero endpoint and pretty-prints
+    the API call and the JSON response to the console.
+
+    Args:
+        base_service_url: The Cicero Cloud API base URL.
+        request_query: The endpoint path plus query string built by call_api.
+    """
     url = urllib.parse.urljoin(base_service_url, request_query)
     response = requests.get(url)
+
+    # Re-serialize with indentation so the raw response is easier to read.
     obj = json.loads(response.text)
     pretty_response = json.dumps(obj, indent=4)
 
@@ -49,6 +87,22 @@ def get_contents(base_service_url, request_query):
     print(pretty_response)
 
 def call_api(base_service_url, service_endpoint, license, latitude, longitude, location, max):
+    """
+    Drives the interactive/CLI loop: gathers the input fields, builds and submits the
+    REST query, prints the result, and optionally repeats for another record.
+
+    It runs a single pass and exits when all four fields were supplied on the command
+    line. Otherwise it loops, asking for a new record each pass until the user answers "N".
+
+    Args:
+        base_service_url: The Cicero Cloud API base URL.
+        service_endpoint: The specific Cicero endpoint path to call.
+        license: The Melissa license string sent with every request.
+        latitude: Latitude of the location, or None to prompt for it.
+        longitude: Longitude of the location, or None to prompt for it.
+        location: An address or place to search, or None to prompt for it.
+        max: The maximum number of results to return, or None to prompt for it.
+    """
     print("\n=============================== WELCOME TO MELISSA CICERO CLOUD API ==============================\n")
 
     should_continue_running = True
@@ -57,6 +111,9 @@ def call_api(base_service_url, service_endpoint, license, latitude, longitude, l
         input_longitude = ""
         input_location = ""
         input_max = ""
+
+        # No latitude, longitude or location was supplied via command line, so prompt
+        # for every field.
         if not latitude and not longitude and not location:
             print("\nFill in each value to see results")
             input_latitude = input("Latitude: ")
@@ -64,11 +121,14 @@ def call_api(base_service_url, service_endpoint, license, latitude, longitude, l
             input_location = input("Search Location: ")
             input_max = input("Max Return: ")
         else:
+            # At least one field was supplied via command line; use those values as-is.
             input_latitude = latitude
             input_longitude = longitude
             input_location = location
             input_max = max
 
+        # All four fields are required by this sample, so keep prompting for any
+        # that are still missing.
         while not input_latitude or not input_longitude or not input_location or not input_max:
             print("\nFill in each value to see results")
             if not input_latitude:
@@ -80,6 +140,8 @@ def call_api(base_service_url, service_endpoint, license, latitude, longitude, l
             if not input_max:
                 input_max = input("\nMax Return: ")
 
+        # Map input fields to the API's expected query parameter names and
+        # request a JSON response.
         inputs = {
             "format": "json",
             "max": input_max,
@@ -123,6 +185,8 @@ def call_api(base_service_url, service_endpoint, license, latitude, longitude, l
 
         is_valid = False;
 
+        # If every field came from the command line, treat this as a one-shot run
+        # rather than looping for additional records.
         if (latitude is not None) and (longitude is not None) and (location is not None) and (max is not None):
             inputline = latitude + longitude + location
         else:
@@ -132,6 +196,8 @@ def call_api(base_service_url, service_endpoint, license, latitude, longitude, l
             is_valid = True
             should_continue_running = False
 
+        # Otherwise ask whether to test another record. Keep prompting until we get a
+        # valid Y/N. "N" ends the program; "Y" falls through to another pass.
         while not is_valid:
             test_another_response = input("\nTest another record? (Y/N)")
             if test_another_response != '':
