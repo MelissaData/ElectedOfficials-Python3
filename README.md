@@ -1,13 +1,11 @@
-# Melissa - Cicero Cloud API Python3
+# Melissa - Elected Officials Cloud API Python3
 
 ## Purpose
-This code showcases the Melissa Cicero Cloud API using Python3.
+This code showcases the Melissa Elected Officials Cloud API using Python3.
 
 Please feel free to copy or embed this code to your own project. Happy coding!
 
-For the latest Melissa Cicero release notes, please visit: https://releasenotes.melissa.com/cloud-api/cicero-api/
-
-For further documentation, please visit: https://docs.melissa.com/cloud-api/cicero/cicero-quickstart.html
+For further documentation, please visit: https://docs.melissa.com/cloud-api/elected-officials/elected-officials-quickstart.html
 
 The console will ask the user for:
 
@@ -49,15 +47,15 @@ And return information of the location such as:
 ## Tested Environments
 - Windows 10 64-bit Python 3.10.4, Powershell 5.1
 - Ubuntu Linux 20.04.04 LTS 64-bit Python 3.10.4
-- Cicero Cloud API Version 3.1
+- Elected Officials Cloud API Version 10.1137.1.20261009
 
 ## Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ### Download this project
 ```
-git clone https://github.com/MelissaData/Cicero-Python3
-cd Cicero-Python3
+git clone https://github.com/MelissaData/ElectedOfficials-Python3
+cd ElectedOfficials-Python3
 ```
 
 ## Windows
@@ -100,22 +98,22 @@ There are two modes:
 
 	The script will prompt the user for input(s), then use the provided input(s) to call the Cloud API. For example:
 	```
-	.\CiceroPython3.ps1
+	.\ElectedOfficialsPython3.ps1
 	```
 
 - Command Line 
 
 	You can pass a latitude, longitude, number of records, and license string into `-lat`, `-long`, `-location`, `-max`, and `-license` parameters respectively to test the Cloud API. For example: 
 	```
-    .\CiceroPython3.ps1 -lat "33.637520" -long "-117.606920" -location "22382 Avenida Empresa, Rancho Santa Margarita, CA, 92688" -max "1"
-    .\CiceroPython3.ps1 -lat "33.637520" -long "-117.606920" -location "22382 Avenida Empresa, Rancho Santa Margarita, CA, 92688" -max "1" -license "<your_license_string>"
+    .\ElectedOfficialsPython3.ps1 -lat "33.637520" -long "-117.606920" -location "22382 Avenida Empresa, Rancho Santa Margarita, CA, 92688" -max "1"
+    .\ElectedOfficialsPython3.ps1 -lat "33.637520" -long "-117.606920" -location "22382 Avenida Empresa, Rancho Santa Margarita, CA, 92688" -max "1" -license "<your_license_string>"
     ```
 	
 This is the expected output from a successful setup for interactive mode:
 
 ![alt text](/screenshots/output.png)
 
-For full detailed response example please see https://docs.melissa.com/cloud-api/cicero/cicero-reference-guide.html#response
+For full detailed response example please see https://docs.melissa.com/cloud-api/elected-officials/elected-officials-reference-guide.html#response-fields
 
 ## Linux
 
@@ -164,22 +162,22 @@ There are two modes:
 
 	The script will prompt the user for input(s), then use the provided input(s) to call the Cloud API. For example:
 	```
-	./CiceroPython3.sh
+	./ElectedOfficialsPython3.sh
 	```
 
 - Command Line 
 
 	You can pass a latitude, longitude, number of records, and license string into `--lat`, `--long`, `--location`, `--max`, and `--license` parameters respectively to test the Cloud API. For example: 
 	```
-    ./CiceroPython3.sh --lat "33.637520" --long "-117.606920" --location "22382 Avenida Empresa, Rancho Santa Margarita, CA, 92688" --max "1"
-    ./CiceroPython3.sh --lat "33.637520" --long "-117.606920" --location "22382 Avenida Empresa, Rancho Santa Margarita, CA, 92688" --max "1" --license "<your_license_string>"
+    ./ElectedOfficialsPython3.sh --lat "33.637520" --long "-117.606920" --location "22382 Avenida Empresa, Rancho Santa Margarita, CA, 92688" --max "1"
+    ./ElectedOfficialsPython3.sh --lat "33.637520" --long "-117.606920" --location "22382 Avenida Empresa, Rancho Santa Margarita, CA, 92688" --max "1" --license "<your_license_string>"
     ```
 
 This is the expected output from a successful setup for interactive mode:
 
 ![alt text](/screenshots/output2.png)
 
-For full detailed response example please see https://docs.melissa.com/cloud-api/cicero/cicero-reference-guide.html#response
+For full detailed response example please see https://docs.melissa.com/cloud-api/elected-officials/elected-officials-reference-guide.html#
 
 ## Contact Us
 For free technical support, please call us at 800-MELISSA ext. 4 (800-635-4772 ext. 4) or email us at tech@melissa.com.

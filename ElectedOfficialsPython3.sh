@@ -1,28 +1,29 @@
 #!/bin/bash
 
-# Runs the Melissa Cicero Cloud API Python 3 sample.
+# Runs the Melissa Elected Officials Cloud API Python 3 sample.
 #
-# This script runs CiceroPython3.py with python3, passing along the license and (if
-# supplied) the location fields.
+# This script runs ElectedOfficialsPython3.py with python3, passing along the license and
+# (if supplied) the latitude, longitude, search location, and max results.
 #
 # Overall flow:
 #   1. Parse the command-line options below.
 #   2. Resolve the license (--license, then a prompt, then the MD_LICENSE environment variable).
-#   3. Run CiceroPython3.py: with the location fields if --lat or --long was supplied,
-#      otherwise with only the license (the Python program prompts for each field).
+#   3. Run ElectedOfficialsPython3.py: with the location inputs if a latitude or longitude
+#      was supplied, otherwise with only the license (the Python program prompts for the
+#      inputs).
 #
 # Options (each takes a value):
-#   --lat       Latitude of the location.
-#   --long      Longitude of the location.
-#   --location  Address or place to search.
-#   --max       Maximum number of results to return.
+#   --lat       Latitude of the location to look up.
+#   --long      Longitude of the location to look up.
+#   --location  Free-form search location, such as a street address.
+#   --max       Maximum number of elected officials to return.
 #   --license   License string. If omitted, the script prompts for it; if the prompt
 #               is left blank, it falls back to MD_LICENSE. Running without --license
 #               always prompts, even when MD_LICENSE is set.
 #
 # Examples:
-#   ./CiceroPython3.sh --license "your-license"
-#   ./CiceroPython3.sh --lat "33.637562" --long "-117.606887" --location "22382 Avenida Empresa, Rancho Santa Margarita, CA" --max "3" --license "your-license"
+#   ./ElectedOfficialsPython3.sh --license "your-license"
+#   ./ElectedOfficialsPython3.sh --lat "33.637520" --long "-117.606920" --location "22382 Avenida Empresa, Rancho Santa Margarita, CA, 92688" --max "1" --license "your-license"
 
 ######################### Constants ##########################
 
@@ -37,8 +38,8 @@ location=""
 license=""
 max=""
 
-# Read each --flag and its value. A missing value, or a value that looks like another
-# flag (e.g. "--max"), is an error. Negative numbers such as "-117.6" are allowed.
+# Read each --flag and its value. A flag with no value, or whose value looks like another
+# flag (e.g. "--max"), is an error. Negative numbers such as "-117.606920" are accepted.
 # Unrecognized options are ignored.
 while [ $# -gt 0 ] ; do
   case $1 in
@@ -92,7 +93,7 @@ while [ $# -gt 0 ] ; do
 done
 
 ########################## Main ############################
-printf "\n=================================== Melissa Cicero Cloud API =====================================\n"
+printf "\n=================================== Melissa Elected Officials Cloud API =====================================\n"
 
 # Get license (either from parameters or user input)
 if [ -z "$license" ];
@@ -115,11 +116,11 @@ fi
 
 # Run project
 # No latitude or longitude supplied -> run with only the license (the program prompts);
-# otherwise pass every field through.
+# otherwise pass all of the inputs through.
 if [ -z "$lat" ] && [ -z "$long" ];
 then
-    python3 CiceroPython3.py --license $license 
+    python3 ElectedOfficialsPython3.py --license $license 
 else
-    python3 CiceroPython3.py --license $license --lat "$lat" --long "$long" --location "$location" --max "$max"
+    python3 ElectedOfficialsPython3.py --license $license --lat "$lat" --long "$long" --location "$location" --max "$max"
 fi
 

@@ -1,27 +1,27 @@
 <#
 .SYNOPSIS
-    Runs the Melissa Cicero Cloud API Python 3 sample.
+    Runs the Melissa Elected Officials Cloud API Python 3 sample.
 
 .DESCRIPTION
-    This script runs CiceroPython3.py with python3, passing along the license
-    and (if supplied) the location fields.
+    This script runs ElectedOfficialsPython3.py with python3, passing along the license
+    and (if supplied) the latitude, longitude, search location, and max results.
 
     Overall flow:
       1. Resolve the license (parameter, prompt, or MD_LICENSE environment variable).
-      2. Run CiceroPython3.py: with the location fields if any was supplied, otherwise
-         with only the license (the Python program prompts for each field).
+      2. Run ElectedOfficialsPython3.py: with the location inputs if any were supplied,
+         otherwise with only the license (the Python program prompts for the inputs).
 
 .PARAMETER lat
-    Latitude of the location.
+    Latitude of the location to look up.
 
 .PARAMETER long
-    Longitude of the location.
+    Longitude of the location to look up.
 
 .PARAMETER location
-    Address or place to search.
+    Free-form search location, such as a street address.
 
 .PARAMETER max
-    Maximum number of results to return.
+    Maximum number of elected officials to return.
 
 .PARAMETER license
     License string. Resolved in this order:
@@ -35,10 +35,10 @@
     Accepted for parity with other sample scripts; not currently used to suppress output.
 
 .EXAMPLE
-    .\CiceroPython3.ps1 -license "your-license"
+    .\ElectedOfficialsPython3.ps1 -license "your-license"
 
 .EXAMPLE
-    .\CiceroPython3.ps1 -lat "33.637562" -long "-117.606887" -location "22382 Avenida Empresa, Rancho Santa Margarita, CA" -max "3" -license "your-license"
+    .\ElectedOfficialsPython3.ps1 -lat "33.637520" -long "-117.606920" -location "22382 Avenida Empresa, Rancho Santa Margarita, CA, 92688" -max "1" -license "your-license"
 #>
 
 ######################### Parameters ##########################
@@ -52,7 +52,7 @@ param(
     )
 
 ########################## Main ############################
-Write-Host "`n===================================== Melissa Cicero Cloud API ===================================`n"
+Write-Host "`n===================================== Melissa Elected Officials Cloud API ===================================`n"
 
 # Get license (either from parameters or user input)
 if ([string]::IsNullOrEmpty($license) ) {
@@ -70,11 +70,11 @@ if ([string]::IsNullOrEmpty($license)) {
 }
 
 # Run project
-# No location fields supplied -> run with only the license (the program prompts);
-# otherwise pass every field through.
+# No location inputs supplied -> run with only the license (the program prompts);
+# otherwise pass all of the inputs through.
 if ([string]::IsNullOrEmpty($lat) -and [string]::IsNullOrEmpty($long) -and [string]::IsNullOrEmpty($location) -and [string]::IsNullOrEmpty($max)) {
-  python3 CiceroPython3.py --license $license 
+  python3 ElectedOfficialsPython3.py --license $license 
 }
 else {
-  python3 CiceroPython3.py --license $license --lat $lat --long $long --location $location --max $max
+  python3 ElectedOfficialsPython3.py --license $license --lat $lat --long $long --location $location --max $max
 }
